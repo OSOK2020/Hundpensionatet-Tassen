@@ -1,5 +1,24 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
 #mainheader, #opentime {
     font-family: fantasy;
     text-align: center;
-    
 }
+
+#navigation-top, #navigation-buttom {
+    text-align: center;
+}
+
+#navigation-buttom ul {
+    list-style: none;
+    padding: 0;
+}
+
