@@ -22,3 +22,57 @@ main {
     padding: 0;
 }
 
+.info-footer {
+    font-family: fantasy;
+    text-align: center;
+}
+
+.info-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 2px solid blue;
+    margin: 0 auto;
+}
+
+/* Surfplatta */
+@media (min-width: 768px) {
+    .info-body {
+        width: 80%;
+    } 
+}
+/* Desktop */
+@media (min-width: 1024px) {
+    .info-body {
+        width: 60%;
+    } 
+}
+
+.homepage-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem auto;
+    border: 2px solid blue;
+}
+
+.homepage-img img {
+    max-width: 500px;
+    width: 100%;    /* Bilden fyller hela figure-elementets bredd */
+    height: auto;   /* Behåller bildens proportioner */
+}
+
+
+/* Surfplatta */
+@media (min-width: 768px) {
+    .homepage-img {
+        width: 80%;
+    } 
+}
+/* Desktop */
+@media (min-width: 1024px) {
+    .homepage-img {
+        width: 60%;
+    } 
+}
