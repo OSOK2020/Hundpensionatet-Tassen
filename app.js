@@ -7,11 +7,13 @@ console.log(openDays.length)
 function updateTimer() {
     const dateNow = new Date();
 
-    getTimer.textContent = dateNow.toLocaleTimeString("sv-SE", {
+    getTimer.textContent = `Klockan är: ${dateNow.toLocaleTimeString("sv-SE", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
-    });
+    })} och dagens Datum är: `;
+
+    getTimer.textContent += `${dateNow.toLocaleDateString("sv-SE")}`
 }
 
 function updateIsOpen() {
@@ -76,4 +78,5 @@ function updateIsOpen() {
 setInterval(() => {
     updateTimer();
     updateIsOpen();
+
 }, 1000)
