@@ -4,3 +4,4 @@ Added the semantic and structure of the main homepage with links to the other 4 
 Added style to the homepage in style.css
 Added mediaqueries for the picture on the homepage in style.css
 Edited the links to work correctly and some styling to the homepage. In addition, I added the links to each page along with a footer with info.
+Added functionality to the homepage that indicates whether or not they are open now and if not the countdown to the next opeining day and hour
