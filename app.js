@@ -1,9 +1,16 @@
 const getTimer = document.getElementById("openTimer")
 const getDaysOpen = document.getElementById("daysOpen")
 
-const openDays = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"]
+const openDays = ["Söndag", 
+                  "Måndag", 
+                  "Tisdag",
+                  "Onsdag", 
+                  "Torsdag",
+                  "Fredag", 
+                  "Lördag"
+                ];
 
-function updateTimer() {
+export function updateTimer() {
     const dateNow = new Date();
 
     getTimer.textContent = `Klockan är: ${dateNow.toLocaleTimeString("sv-SE", {
@@ -15,11 +22,30 @@ function updateTimer() {
     getTimer.textContent += `${dateNow.toLocaleDateString("sv-SE")}`
 }
 
-function updateIsOpen() {
+export function getTimeUntilClose () {
+    const now= new Date();
+    const nextClose = new Date ();
+
+    if (nextClose.getDay() === 6) {
+                nextClose.setHours(14, 0, 0, 0);
+    } else {
+                nextClose.setHours(18, 0, 0, 0);
+    };
+
+    const diff = nextClose - now;
+
+    return {
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor(diff % (1000 * 60 * 60) / (1000 * 60)),
+        seconds: Math.floor(diff % (1000 * 60) / 1000)
+    }
+}
+
+export function updateIsOpen() {
     const dateToday = new Date()
-    const dayToday = new Date().getDay();
-    const hourToday = new Date().getHours();
-    const timeToday = new Date().toLocaleTimeString();
+    const dayToday = dateToday.getDay();
+    const hourToday = dateToday.getHours();
+
     getDaysOpen.textContent = ""; 
 
     const li = document.createElement("li");
@@ -37,7 +63,10 @@ function updateIsOpen() {
         hourToday < 14;
 
     if (isWeekday || isSaturday) {
-        li.textContent += ` - och klockan är ${timeToday} - så vi har öppet`;
+        const {hours, minutes, seconds} = getTimeUntilClose();
+
+        li.textContent += ` - och vi stänger om ${hours} timmar, 
+        ${minutes} minuter & ${seconds} sekunder - så vi har öppet`;
     } else {
         const nextOpen = new Date();
         //om det är vardag före 07:00
@@ -56,13 +85,13 @@ function updateIsOpen() {
             } else {
                 nextOpen.setHours(7, 0, 0, 0);
             }
-            while (nextOpen.getDate() === 0) {
+            while (nextOpen.getDay() === 0) {
                 nextOpen.setDate(nextOpen.getDate() + 1);
                 nextOpen.setHours(7, 0, 0, 0);
             }
         }
         const diff = nextOpen - dateToday;
-  
+
         const hours = Math.floor(diff/ (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000*60)/ 1000));
@@ -77,7 +106,6 @@ function updateIsOpen() {
 setInterval(() => {
     updateTimer();
     updateIsOpen();
-
 }, 1000)
 
 const getServiceCard = document.querySelectorAll(".service-card")
@@ -92,5 +120,3 @@ getServiceCard.forEach(card => {
         showDetails(card)
     })
 });
-
-

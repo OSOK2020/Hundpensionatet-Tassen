@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/kontakt.js" defer></script>
-    <link rel="stylesheet" href="css/kontakt.css">
+    <script type="module" src="../js/kontakt.js" defer></script>
+    <link rel="stylesheet" href="../css/kontakt.css">
     <title>Tassen</title>
 </head>
 <body>
@@ -16,6 +16,15 @@
         <a href="kontakt.html">Kontakt</a>
     </nav>
     
+    <header>
+        <h1 id="mainheader">Hundpensionatet Tassen</h1>
+        <p id="opentime">Öppettider: Mån-fre 07-18 | Lördag 09-14 | Söndag stängt</p>
+        <div>
+            <p id="openTimer">Timer Kontakt</p>
+            <ul id="daysOpen"></ul>
+        </div>
+    </header>
+
     <main>
         <form id="kontakt">
             <input type="text" id="name" placeholder="ditt namn">
@@ -35,7 +44,7 @@
 
         <section id="navigation-buttom">
             <ul>
-                <li><a href="index.html">Hem & Öppettider</a></li>
+                <li><a href="../index.html">Hem & Öppettider</a></li>
                 <li><a href="om-oss.html">Om oss</a></li>
                 <li><a href="services.html">Tjänster</a></li>
                 <li><a href="personal.html">Personal</a></li>
