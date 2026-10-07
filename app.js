@@ -2,7 +2,6 @@ const getTimer = document.getElementById("openTimer")
 const getDaysOpen = document.getElementById("daysOpen")
 
 const openDays = ["Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag"]
-console.log(openDays.length)
 
 function updateTimer() {
     const dateNow = new Date();
@@ -81,11 +80,17 @@ setInterval(() => {
 
 }, 1000)
 
-const getServiceOne = document.getElementById("service-1")
-const getServiceTwo = document.getElementById("service-2")
-const getServiceThree = document.getElementById("service-3")
-const getServiceFour = document.getElementById("service-4")
+const getServiceCard = document.querySelectorAll(".service-card")
 
-getServiceOne.addEventListener("click", () => {
+function showDetails (card) {
+        const details = card.querySelector(".service-details");
+        details.classList.toggle("hidden");
+}
 
-})
+getServiceCard.forEach(card => {
+    card.addEventListener("click", () => {
+        showDetails(card)
+    })
+});
+
+
