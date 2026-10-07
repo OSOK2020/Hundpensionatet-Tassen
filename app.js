@@ -80,3 +80,12 @@ setInterval(() => {
     updateIsOpen();
 
 }, 1000)
+
+const getServiceOne = document.getElementById("service-1")
+const getServiceTwo = document.getElementById("service-2")
+const getServiceThree = document.getElementById("service-3")
+const getServiceFour = document.getElementById("service-4")
+
+getServiceOne.addEventListener("click", () => {
+
+})

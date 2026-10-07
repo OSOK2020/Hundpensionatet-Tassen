@@ -2,6 +2,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: lightgreen;
 }
 
 main {
@@ -83,5 +84,60 @@ main {
     align-items: center;
     text-align: center;
     border: 2px solid blue;
-    margin: 0 auto;
+    margin: 1px auto;
+}
+
+#daysOpen  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 2px solid blue;
+    margin: 1px auto;
+    list-style: none;
+}
+
+/* Surfplatta */
+@media (max-width: 1024px) {
+    #services {
+        border: 2px solid blue;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        list-style: none;
+        padding: 4px;
+        justify-content: space-between;
+    } 
+}
+/* Desktop */
+@media (min-width: 1024px) {
+    #services {
+        border: 2px solid blue;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        list-style: none;
+        padding: 2rem;
+        justify-content: space-between;
+    } 
+}
+.service-card {
+    padding: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.service-details {
+    margin-top: 1rem;
 }
