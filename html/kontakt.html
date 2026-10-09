@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="../js/kontakt.js" defer></script>
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../css/kontakt.css">
     <title>Tassen</title>
 </head>
@@ -27,11 +28,44 @@
 
     <main>
         <form id="kontakt">
-            <input type="text" id="name" placeholder="ditt namn">
-            <button type="submit">Skicka</button>
+            <label for="name">Namn: </label>
+            <input type="text" id="name" placeholder="Ditt namn..." required>
+            <label for="email">E-post: </label>
+            <input type="email" id="email" placeholder="Din e-post..." required>
+            <label for="phone">Telefon: </label>
+            <input type="tel" id="phone" placeholder="Mobilnummer..." required>
+            <fieldset>
+                <legend>Välj kategori</legend>
+                <input type="checkbox" name="service" id="kindergarden" 
+                value="kindergarden">
+                <label for="kindergarden">Hunddagis</label>
+                <input type="checkbox" name="service" id="dog-walk" 
+                value="dog-walk">
+                <label for="dog-walk">Hundrastning</label>
+                <input type="checkbox" name="service" id="dog-pension" 
+                value="dog-pension">
+                <label for="dog-pension">Hundpensionat</label>
+                <input type="checkbox" name="service" id="dog-activity" 
+                value="dog-activity">
+                <label for="dog-activity">Aktivitetsstund</label>
+            </fieldset>
+            <label for="message">Meddelande:</label>
+            <textarea name="message" id="message" rows="10" cols="62"
+                placeholder="Skriv här..."></textarea>
+            <button id="save-Btn">Spara</button>
+            <fieldset>
+                <legend>Prioritering</legend>
+                <input type="radio" name="prio" id="low" value="low">
+                <label for="low">Låg</label>
+                <input type="radio" name="prio" id="medium" value="medium">
+                <label for="medium">Medium</label>
+                <input type="radio" name="prio" id="high" value="high">
+                <label for="high">Hög</label>
+            </fieldset>
+            <button id="send-Btn" type="submit">Skicka</button>
         </form>
-
-        <p id="kontakt-resultat"></p>
+        <h2 id="bokningar">Bokningar</h2>
+        <ul id="kontakt-resultat">Du har inga bokningar</ul>
     </main>
 
     <footer>

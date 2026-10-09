@@ -66,7 +66,7 @@ export function updateIsOpen() {
         const {hours, minutes, seconds} = getTimeUntilClose();
 
         li.textContent += ` - och vi stänger om ${hours} timmar, 
-        ${minutes} minuter & ${seconds} sekunder - så vi har öppet`;
+        ${minutes} minuter & ${seconds} sekunder - så vi har öppet 😀`;
     } else {
         const nextOpen = new Date();
         //om det är vardag före 07:00
@@ -96,8 +96,10 @@ export function updateIsOpen() {
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000*60)/ 1000));
 
-        li.textContent += ` - vi har stängt. Vi öppnar igen om ${hours} timmar, 
-        ${minutes} minuter och ${seconds} sekunder.`;
+        li.textContent += ` - vi har stängt 💔
+        Vi öppnar igen om ${hours} timmar, 
+        ${minutes} minuter och ${seconds} sekunder. 💤`;
+
     }
 
     getDaysOpen.appendChild(li)

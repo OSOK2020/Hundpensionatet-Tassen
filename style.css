@@ -14,6 +14,14 @@ main {
     text-align: center;
 }
 
+#mainheader {
+    font-size: 4rem;
+}
+
+#opentime {
+    font-size: 2rem;
+}
+
 #navigation-top, #navigation-buttom {
     text-align: center;
 }
@@ -34,7 +42,7 @@ main {
     align-items: center;
     text-align: center;
     border: 2px solid blue;
-    margin: 0 auto;
+    margin: 1rem auto;
 }
 
 /* Surfplatta */
@@ -78,23 +86,17 @@ main {
     } 
 }
 
-#openTimer {
+#daysOpen, #openTimer {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    border: 2px solid blue;
-    margin: 1px auto;
-}
-
-#daysOpen  {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    border: 2px solid blue;
-    margin: 1px auto;
+    margin: 1rem auto;
     list-style: none;
+    font-size: large;
+    font-weight: bold;
+    font-size: 1.5rem;
+    white-space: pre-line;
 }
 
 /* Surfplatta */
@@ -132,6 +134,11 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.service-card:hover {
+    background-color: aqua;
+
 }
 
 .hidden {
