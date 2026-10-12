@@ -108,9 +108,9 @@ function updateBooking() {
         
         const deletedItmes = deleteItem();
 
-        bookingItem.textContent = `
-        ${booking.name} - ${booking.dogName} - ${booking.date}
-        ${booking.message}
+        bookingItem.textContent = `Prioritet: (${booking.prio})
+        ${booking.name} - ${booking.dogName} - din bokade tid är: ${booking.date}
+        - för: ${booking.service}- ${booking.message}
         `
         contactResults.append(bookingItem, deletedItmes);
     }); 
