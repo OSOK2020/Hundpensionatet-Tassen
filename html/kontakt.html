@@ -34,6 +34,10 @@
             <input type="email" id="email" placeholder="Din e-post..." required>
             <label for="phone">Telefon: </label>
             <input type="tel" id="phone" placeholder="Mobilnummer..." required>
+            <label for="dogName">Hundens namn: </label>
+            <input type="text" id="dogName" placeholder="Hundens namn..." required>
+            <label for="date">Datum: </label>
+            <input type="datetime-local" name="date" id="date">
             <fieldset>
                 <legend>Välj kategori</legend>
                 <input type="checkbox" name="service" id="kindergarden" 
@@ -50,7 +54,7 @@
                 <label for="dog-activity">Aktivitetsstund</label>
             </fieldset>
             <label for="message">Meddelande:</label>
-            <textarea name="message" id="message" rows="10" cols="62"
+            <textarea name="message" id="message" rows="10"
                 placeholder="Skriv här..."></textarea>
             <button id="save-Btn">Spara</button>
             <fieldset>
@@ -65,7 +69,7 @@
             <button id="send-Btn" type="submit">Skicka</button>
         </form>
         <h2 id="bokningar">Bokningar</h2>
-        <ul id="kontakt-resultat">Du har inga bokningar</ul>
+        <ul id="kontakt-resultat"></ul>
     </main>
 
     <footer>
