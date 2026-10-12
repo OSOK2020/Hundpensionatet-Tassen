@@ -5,8 +5,7 @@ setInterval(() => {
     updateIsOpen();
 }, 1000)
 
-const kontaktForm = document.getElementById("kontakt");
-
+const contactForm = document.getElementById("kontakt");
 const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
 const phoneInput = document.getElementById("phone");
@@ -18,7 +17,8 @@ const bookingField = {
     email: emailInput,
     phone: phoneInput,
     dogName: dogNameInput,
-    date: dateInput
+    date: dateInput,
+    delete: false
 }
 
 const kindergardenCheckbox = document.getElementById("kindergarden");
@@ -35,7 +35,7 @@ const serviceOptions = [
 
 const messageTextarea = document.getElementById("message");
 
-const saveBtn = document.getElementById("save-Btn");
+const showBookings = document.getElementById("show-Btn");
 
 const prioLow = document.getElementById("low");
 const prioMedium = document.getElementById("medium");
@@ -47,39 +47,57 @@ const prioOptions = [
     prioHigh
 ];
 
-const sendBtn = document.getElementById("send-Btn");
+// const sendBtn = document.getElementById("send-Btn");
 
 const contactResults = document.getElementById("kontakt-resultat");
+
+function saveToLocalStorage (items) {
+    return localStorage.setItem("bookings", JSON.stringify(items))
+} 
 
 function saveBooking () {
 
     const newBooking = {
-        name: bookingField.name,
-        email: bookingField.email,
-        phone: bookingField.phone,
-        dogName: bookingField.dogName,
-        date: bookingField.date
+        name: bookingField.name.value,
+        email: bookingField.email.value,
+        phone: bookingField.phone.value,
+        dogName: bookingField.dogName.value,
+        date: bookingField.date.value,
+        delete: bookingField.delete,
+        message: messageTextarea.value,
+        service: serviceOptions
+        .filter(service => service.checked)
+        .map(service => service.value),
+        prio: prioOptions.find(prio => prio.checked)?.value || ""
     }
 
-    const savedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-    console.log(savedBookings.length)
+    const savedBookings = getBookingsFromLocalStorage();
+    console.log(savedBookings)
 
     savedBookings.push(newBooking);
 
-    localStorage.setItem("bookings", JSON.stringify(savedBookings));
+    console.log(savedBookings)
 
-    console.log("Saved name:" + newBooking)
+    saveToLocalStorage(savedBookings)
+
+    contactForm.reset();
+
+    console.log("Saved booking:" + newBooking)
 }
 
-saveBtn.addEventListener("click", saveBooking);
+function getBookingsFromLocalStorage() {
+       const savedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
+       return savedBookings
+}
 
 function updateBooking() {
     //Get bookings
-    const savedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-        console.log(savedBookings.length)
-        console.log(savedBookings)
+    const savedBookings = getBookingsFromLocalStorage();
+
+
+    console.log(savedBookings)
     
-        contactResults.innerHTML = "";
+    contactResults.innerHTML = "";
 
     if (savedBookings.length === 0 ) {
         contactResults.textContent = "Du har inga bokningar"
@@ -87,11 +105,59 @@ function updateBooking() {
 
     savedBookings.forEach((booking) => {
         const bookingItem = document.createElement("li");
+        
+        const deletedItmes = deleteItem();
+
         bookingItem.textContent = `
         ${booking.name} - ${booking.dogName} - ${booking.date}
+        ${booking.message}
         `
-        contactResults.appendChild(bookingItem);
+        contactResults.append(bookingItem, deletedItmes);
     }); 
 }
 
-updateBooking();
+function createDeleteButtons () {
+    const deleteBooking = document.createElement("button");
+        deleteBooking.textContent = "Ta bort";
+    return deleteBooking
+}
+
+function deleteItem () {
+    const deleteButton = createDeleteButtons();
+    const savedBookings = getBookingsFromLocalStorage();
+    
+    deleteButton.addEventListener("click", () => {
+        savedBookings.forEach(booking => {
+
+            booking.delete = true;
+            
+            saveToLocalStorage(booking)
+            
+            if (booking.delete === true) {
+                const updateBookings = savedBookings.filter(
+                    item => item !== booking
+                );
+                
+                saveToLocalStorage(updateBookings);
+                
+                contactResults.innerHTML = "";
+
+                updateBooking();
+            }
+        })
+    })
+    
+    return deleteButton
+};
+
+contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    saveBooking();
+    updateBooking();
+});
+
+showBookings.addEventListener("click", (event) => {
+    event.preventDefault();
+    updateBooking();
+})
+
