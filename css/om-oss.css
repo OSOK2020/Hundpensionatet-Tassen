@@ -37,14 +37,14 @@ main {
     } 
 }
 
-#omOssCard-1 {
-    border: 8px solid brown;
+#omOssCard-1,  #omOssCard-2, #omOssCard-3, #omOssCard-4, #omOssCard-5 {
     text-align: center;
 }
 
 .omOssCard-details {
-    border: 1rem solid gray;
+    border: 1rem solid gold;
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .hidden {
