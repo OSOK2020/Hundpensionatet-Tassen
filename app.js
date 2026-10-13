@@ -1,3 +1,5 @@
+import { services } from "./js/services.js";
+
 const getTimer = document.getElementById("openTimer")
 const getDaysOpen = document.getElementById("daysOpen")
 
@@ -110,15 +112,48 @@ setInterval(() => {
     updateIsOpen();
 }, 1000)
 
-const getServiceCard = document.querySelectorAll(".service-card")
 
-function showDetails (card) {
-        const details = card.querySelector(".service-details");
-        details.classList.toggle("hidden");
+// Render services here
+
+function renderServices () {
+    const serviceSection = document.querySelector("#services");
+
+    serviceSection.replaceChildren();
+
+    services.forEach(service => {
+
+        const card = document.createElement("div");
+        card.id = "service-" + service.id;
+        card.classList.add("service-card");
+
+        card.addEventListener("click", () => {
+            const details = card.querySelector(".service-details");
+            details.classList.toggle("hidden");
+        });
+        
+        const title = document.createElement("h3");
+        title.textContent = service.title;
+
+        const description = document.createElement("p");
+        description.textContent = service.description;
+
+        const price = document.createElement("span");
+        price.textContent = `${service.price} kr/${service.frequency}`
+        
+
+        const details = document.createElement("div");
+        details.classList.add("service-details", "hidden");
+        details.textContent = service.detailedView;
+
+        card.append(
+            title,
+            description,
+            price,
+            details
+        );
+
+        serviceSection.appendChild(card)
+    });
 }
 
-getServiceCard.forEach(card => {
-    card.addEventListener("click", () => {
-        showDetails(card)
-    })
-});
+renderServices();
