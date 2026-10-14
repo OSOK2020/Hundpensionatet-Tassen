@@ -118,6 +118,9 @@ setInterval(() => {
 function renderServices () {
     const serviceSection = document.querySelector("#services");
 
+    if (!serviceSection) {
+        return
+    }
     serviceSection.replaceChildren();
 
     services.forEach(service => {
@@ -130,7 +133,7 @@ function renderServices () {
             const details = card.querySelector(".service-details");
             details.classList.toggle("hidden");
         });
-        
+
         const title = document.createElement("h3");
         title.textContent = service.title;
 
@@ -157,3 +160,104 @@ function renderServices () {
 }
 
 renderServices();
+
+//Render weather and location and if error and loading time
+
+const searchWeather = document.getElementById("searchWeather");
+const cityInput = document.getElementById("cityInput");
+
+console.log(searchWeather)
+
+if (searchWeather && cityInput) {
+    searchWeather.addEventListener("click", async () => {
+
+        const startTime = performance.now();
+
+        const city = cityInput.value.trim();
+
+        const laodingStatus = document.getElementById("loadingStatus");
+
+        laodingStatus.textContent = "🔄 Hämtar väderdata...";
+
+        cityInput.value = "";
+
+        try {
+            const geoResponse = await fetch (
+            `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=sv&format=json`
+            );
+
+            const geoData = await geoResponse.json();
+            console.log(geoData);
+            
+            if (!city){
+                throw new Error("Du måste ange en ort!");
+            }
+
+            // "" === false
+            if(!geoData.results) {
+                throw new Error(
+                    `Ingen ort hittades: ${city}, vänligen skriv in en giltig ort!`
+                );
+                
+            };
+
+            const location = geoData.results[0];
+
+            console.log(location.name)
+            console.log(location.latitude)
+            console.log(location.longitude)
+
+            const weatherResponse = await fetch (
+            `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current=temperature_2m,wind_speed_10m`
+            );
+            const weatherData = await weatherResponse.json();
+            console.log(weatherData)
+
+            const endTime = performance.now();
+
+            const loadTime = (endTime - startTime).toFixed(2);
+
+            laodingStatus.textContent = "";
+
+            createLocationWeather(location, weatherData, null, loadTime);
+
+            } catch (error){
+
+                laodingStatus.textContent = "";
+                
+                createLocationWeather(null, null, error);
+
+            }
+    });
+
+}
+
+//render out the data from the API
+
+function createLocationWeather (location, weatherData, error, loadTime) {
+        const weatherSection = document.getElementById("weather");
+        const pasteWeather = document.createElement("p");
+        if(!error){
+            pasteWeather.textContent = `
+            Ort & land: ${location.name} i ${location.country} | 
+            Temperatur: ${weatherData.current.temperature_2m} 
+            ${weatherData.current_units.temperature_2m} |
+            Laddningstid: ${loadTime} ms
+            `;
+        } else {
+            pasteWeather.textContent = error.message;
+        }
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Ta bort"
+        removeBtn.id = "removeBtn";
+
+        weatherSection.append(pasteWeather, removeBtn)
+        
+        removeBtn.addEventListener("click", () => {
+            pasteWeather.remove();
+            removeBtn.remove();
+        });
+
+        return weatherSection
+}

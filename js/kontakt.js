@@ -11,6 +11,7 @@ const emailInput = document.getElementById("email");
 const phoneInput = document.getElementById("phone");
 const dogNameInput = document.getElementById("dogName");
 const dateInput = document.getElementById("date");
+console.log(dateInput)
 
 const bookingField = {
     name: nameInput,
@@ -47,53 +48,147 @@ const prioOptions = [
     prioHigh
 ];
 
-// const sendBtn = document.getElementById("send-Btn");
-
 const contactResults = document.getElementById("kontakt-resultat");
 
-function saveToLocalStorage (items) {
-    return localStorage.setItem("bookings", JSON.stringify(items))
-} 
+class NewBooking {
+    constructor () {
+        this.name = bookingField.name.value,
+        this.email = bookingField.email.value,
+        this.phone = bookingField.phone.value,
+        this.dogName = bookingField.dogName.value,
+        this.date = bookingField.date.value,
+        this.delete = bookingField.delete,
+        this.message = messageTextarea.value,
 
-function saveBooking () {
-
-    const newBooking = {
-        name: bookingField.name.value,
-        email: bookingField.email.value,
-        phone: bookingField.phone.value,
-        dogName: bookingField.dogName.value,
-        date: bookingField.date.value,
-        delete: bookingField.delete,
-        message: messageTextarea.value,
-        service: serviceOptions
+        this.service = serviceOptions
         .filter(service => service.checked)
-        .map(service => service.value),
-        prio: prioOptions.find(prio => prio.checked)?.value || ""
+        .map(service => service.value)
+        .join(" "),
+
+        this.prio = prioOptions.find(prio => prio.checked)?.value || ""
     }
 
-    const savedBookings = getBookingsFromLocalStorage();
-    console.log(savedBookings)
+    getFormattedDate(dateValue) {
+        const date = new Date(dateValue);
 
-    savedBookings.push(newBooking);
+        const datePart = date.toLocaleDateString("sv-SE");
 
-    console.log(savedBookings)
+        const weekday = date.toLocaleDateString("sv-SE", {
+            weekday: "long",
+        });
 
-    saveToLocalStorage(savedBookings)
+        const time = date.toLocaleTimeString("sv-SE", {
+            hour: "2-digit",
+            minute: "2-digit",
+        }).replace(":", ".");
+
+        return `${datePart} (${weekday}) kl. ${time}`;
+    }
+    
+    isFutureBooking() {
+        return new Date(this.date) > new Date();
+    }
+
+    static daysUntilBooking(dateValue) {
+        const now = new Date();
+        const bookingDate = new Date(dateValue);
+
+        const diff = bookingDate - now;
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        return `${days} dagar, ${hours} timmar & ${minutes} minuter`
+    }
+
+    isAtLeast24HoursAhead() {
+        const bookingDate = new Date(this.date);
+        const now = new Date();
+
+        const diffHours = (bookingDate - now) / (1000 * 60 * 60);
+
+        return diffHours >= 24;
+    }
+
+    isValidBooking() {
+        return this.isFutureBooking() &&
+        this.isAtLeast24HoursAhead();
+    }
+    
+    getNewBooking () {
+        return {
+            name: this.name,
+            email: this.email,
+            phone: this.phone,
+            dogName: this.dogName,
+            date: this.date,
+            formattedDate: this.getFormattedDate(this.date),
+            delete: this.delete,
+            message: this.message,
+            service: this.service,
+            prio: this.prio
+        };
+    }
+}
+
+dateInput.addEventListener("input", () => {
+    const booking = new NewBooking();
+
+    if (!booking.isValidBooking()) {
+        alert("Bokningar måste göras minst 24 timmar i förväg.");
+        
+        dateInput.value = "";
+    }
+});
+
+function saveBooking () {
+    const booking = new NewBooking();
+
+    bookingList.addBooking(booking.getNewBooking());
 
     contactForm.reset();
 
-    console.log("Saved booking:" + newBooking)
+    console.log("Saved booking:", bookingList)
 }
 
-function getBookingsFromLocalStorage() {
-       const savedBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-       return savedBookings
+class BookingList {
+    constructor() {
+        this.bookings = 
+        JSON.parse(localStorage.getItem("bookings")) || [];
+    }
+
+    addBooking(booking) {
+        this.bookings.push(booking);
+
+        localStorage.setItem(
+            "bookings",
+            JSON.stringify(this.bookings)
+        );
+    }
+
+    getbookings() {
+        return this.bookings;
+    }
+
+    removeBooking(index) {
+        this.bookings.splice(index, 1);
+
+        localStorage.setItem(
+            "bookings",
+            JSON.stringify(this.bookings)
+        );
+    }
 }
+
+const bookingList = new BookingList();
 
 function updateBooking() {
-    //Get bookings
-    const savedBookings = getBookingsFromLocalStorage();
 
+    //Get bookings
+    const savedBookings = bookingList.getbookings();
 
     console.log(savedBookings)
     
@@ -101,17 +196,22 @@ function updateBooking() {
 
     if (savedBookings.length === 0 ) {
         contactResults.textContent = "Du har inga bokningar"
-    } 
+    }
 
-    savedBookings.forEach((booking) => {
+    savedBookings.forEach((booking, index) => {
         const bookingItem = document.createElement("li");
         
-        const deletedItmes = deleteItem();
+        const deletedItmes = deleteItem(index);
 
-        bookingItem.textContent = `Prioritet: (${booking.prio})
-        ${booking.name} - ${booking.dogName} - din bokade tid är: ${booking.date}
-        - för: ${booking.service}- ${booking.message}
-        `
+        bookingItem.innerHTML = `<strong> Prioritet:</strong> (${booking.prio})<br>
+       <strong> Ditt namn:</strong> ${booking.name} <br> 
+       <strong> Hundens namn:</strong> ${booking.dogName} <br> 
+        <strong>Din bokade tid är:</strong> ${booking.formattedDate} <br>
+        <strong>Dagar & Timmar kvar:</strong> 
+        ${NewBooking.daysUntilBooking(booking.date)} <br>
+        <strong>Bokade aktiviteter:</strong> ${booking.service} <br>
+        <strong>Meddelande:</strong> ${booking.message}
+        `;
         contactResults.append(bookingItem, deletedItmes);
     }); 
 }
@@ -122,30 +222,16 @@ function createDeleteButtons () {
     return deleteBooking
 }
 
-function deleteItem () {
+function deleteItem (index) {
     const deleteButton = createDeleteButtons();
-    const savedBookings = getBookingsFromLocalStorage();
     
     deleteButton.addEventListener("click", () => {
-        savedBookings.forEach(booking => {
-
-            booking.delete = true;
-            
-            saveToLocalStorage(booking)
-            
-            if (booking.delete === true) {
-                const updateBookings = savedBookings.filter(
-                    item => item !== booking
-                );
-                
-                saveToLocalStorage(updateBookings);
-                
-                contactResults.innerHTML = "";
-
-                updateBooking();
-            }
-        })
-    })
+        bookingList.removeBooking(index);
+        
+        contactResults.innerHTML= "";
+        
+        updateBooking();
+    });
     
     return deleteButton
 };

@@ -148,3 +148,16 @@ main {
 .service-details {
     margin-top: 1rem;
 }
+
+#weather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1rem solid gold;
+    font-size: large;
+}
+
+#cityInput, #searchWeather {
+    font-size: large;
+
+}

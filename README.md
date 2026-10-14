@@ -1,9 +1,12 @@
 # Hundpensionatet-Tassen
-A webpage with 5 pages including the homepage and style added to each of them in seperated css-files and functionality in js-files, one for each page.
-Added the semantic and structure of the main homepage with links to the other 4 pages. In addition i created the html files for each page.
-Added style to the homepage in style.css
-Added mediaqueries for the picture on the homepage in style.css
-Edited the links to work correctly and some styling to the homepage. In addition, I added the links to each page along with a footer with info.
-Added functionality to the homepage that indicates whether or not they are open now and if not the countdown to the next opeining day and hour
-Added functionality to the cards
-Added countdown until closed function and logic etc.
+Starta projektet: 
+
+Öppna index.html direkt eller starta Live Server i VS Code.
+
+Reflektion:
+
+Det svåraste var att arbeta med localStorage och API-anrop. Jag lärde mig mycket om DOM-manipulation och asynkron JavaScript.
+
+Beskrivning av en bugg:
+
+Jag hade problem med att väder-API:t inte gav några resultat. Efter felsökning med console.log upptäckte jag att geoData.results kunde vara undefined. Jag lade därför till en kontroll innan geoData.results[0] användes. Därefter fungerade applikationen korrekt. ``
