@@ -143,7 +143,6 @@ function renderServices () {
         const price = document.createElement("span");
         price.textContent = `${service.price} kr/${service.frequency}`
         
-
         const details = document.createElement("div");
         details.classList.add("service-details", "hidden");
         details.textContent = service.detailedView;
@@ -175,23 +174,28 @@ if (searchWeather && cityInput) {
 
         const city = cityInput.value.trim();
 
-        const laodingStatus = document.getElementById("loadingStatus");
+        const weatherSection = document.getElementById("renderWeather");
+        const loadingStatus = document.createElement("p");
+        loadingStatus.id = "loadingStatus";
 
-        laodingStatus.textContent = "🔄 Hämtar väderdata...";
+        loadingStatus.textContent = "🔄 Hämtar väderdata...";
 
+        weatherSection.prepend(loadingStatus);
+        
         cityInput.value = "";
 
         try {
+
+            if (!city){
+                throw new Error("Du måste ange en ort!");
+            }
+            
             const geoResponse = await fetch (
             `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=sv&format=json`
             );
 
             const geoData = await geoResponse.json();
             console.log(geoData);
-            
-            if (!city){
-                throw new Error("Du måste ange en ort!");
-            }
 
             // "" === false
             if(!geoData.results) {
@@ -217,13 +221,13 @@ if (searchWeather && cityInput) {
 
             const loadTime = (endTime - startTime).toFixed(2);
 
-            laodingStatus.textContent = "";
+            loadingStatus.remove();
 
             createLocationWeather(location, weatherData, null, loadTime);
 
             } catch (error){
 
-                laodingStatus.textContent = "";
+                loadingStatus.remove();
                 
                 createLocationWeather(null, null, error);
 
@@ -235,11 +239,12 @@ if (searchWeather && cityInput) {
 //render out the data from the API
 
 function createLocationWeather (location, weatherData, error, loadTime) {
-        const weatherSection = document.getElementById("weather");
+        const weatherSection = document.getElementById("renderWeather");
         const pasteWeather = document.createElement("p");
+
         if(!error){
             pasteWeather.textContent = `
-            Ort & land: ${location.name} i ${location.country} | 
+            Ort & land: ${location.name} - ${location.country} | 
             Temperatur: ${weatherData.current.temperature_2m} 
             ${weatherData.current_units.temperature_2m} |
             Laddningstid: ${loadTime} ms
@@ -249,14 +254,13 @@ function createLocationWeather (location, weatherData, error, loadTime) {
         }
 
         const removeBtn = document.createElement("button");
-        removeBtn.textContent = "Ta bort"
-        removeBtn.id = "removeBtn";
+        removeBtn.classList.add("removeBtn");
+        removeBtn.textContent = "Ta bort";
 
-        weatherSection.append(pasteWeather, removeBtn)
+        weatherSection.prepend(pasteWeather, removeBtn)
         
-        removeBtn.addEventListener("click", () => {
-            pasteWeather.remove();
-            removeBtn.remove();
+        removeBtn.addEventListener("click", (e) => {
+                weatherSection.replaceChildren();
         });
 
         return weatherSection

@@ -151,13 +151,31 @@ main {
 
 #weather {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
     border: 1rem solid gold;
-    font-size: large;
+    border-radius: 20px;
+    padding: 0.5rem;
+    justify-content: center;
 }
 
-#cityInput, #searchWeather {
-    font-size: large;
+#cityInput {
+    border-radius: 10px;
+    font-size: auto;
+    width: 100%;
+}
 
+ #searchWeather {
+    border-radius: 10px;
+    font-size: auto;
+ }
+
+#renderWeather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-size: large;
+    list-style: none;
+    padding: 1rem;
+    font-weight: bold;
 }
