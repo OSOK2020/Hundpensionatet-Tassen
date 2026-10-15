@@ -1,4 +1,5 @@
 import { updateTimer, updateIsOpen } from "../app.js";
+import { services } from "./services.js";
 
 setInterval(() => {
     updateTimer();
@@ -22,17 +23,17 @@ const bookingField = {
     delete: false
 }
 
-const kindergardenCheckbox = document.getElementById("kindergarden");
-const dogWalkCheckbox = document.getElementById("dog-walk");
-const dogPensionCheckbox = document.getElementById("dog-pension");
-const dogActivityCheckbox = document.getElementById("dog-activity");
+// const kindergardenCheckbox = document.getElementById("kindergarden");
+// const dogWalkCheckbox = document.getElementById("dog-walk");
+// const dogPensionCheckbox = document.getElementById("dog-pension");
+// const dogActivityCheckbox = document.getElementById("dog-activity");
 
-const serviceOptions = [
-    kindergardenCheckbox,
-    dogWalkCheckbox,
-    dogPensionCheckbox,
-    dogActivityCheckbox
-];
+// const serviceOptions = [
+//     kindergardenCheckbox,
+//     dogWalkCheckbox,
+//     dogPensionCheckbox,
+//     dogActivityCheckbox
+// ];
 
 const messageTextarea = document.getElementById("message");
 
@@ -60,10 +61,7 @@ class NewBooking {
         this.delete = bookingField.delete,
         this.message = messageTextarea.value,
 
-        this.service = serviceOptions
-        .filter(service => service.checked)
-        .map(service => service.value)
-        .join(" "),
+        this.service = services.title,
 
         this.prio = prioOptions.find(prio => prio.checked)?.value || ""
     }
@@ -118,6 +116,15 @@ class NewBooking {
         this.isAtLeast24HoursAhead();
     }
     
+    getSerivceOptionsSelected () {
+
+        const getOptions = document.getElementById("options").options;
+
+        return [...getOptions]
+            .filter(option => option.selected)
+            .map(option => option.value);
+    }
+    
     getNewBooking () {
         return {
             name: this.name,
@@ -128,11 +135,29 @@ class NewBooking {
             formattedDate: this.getFormattedDate(this.date),
             delete: this.delete,
             message: this.message,
-            service: this.service,
+            service: this.getSerivceOptionsSelected(),
             prio: this.prio
         };
     }
+
+    getServices () {
+        const getSelect = document.getElementById("options");
+
+        services.forEach(element => {
+                const createOption = document.createElement("option");
+                createOption.textContent = element.title;
+                createOption.value = element.title;
+
+                getSelect.append(createOption)
+        });
+
+        return getSelect
+    }
 }
+
+const renderServices = new NewBooking();
+
+renderServices.getServices();
 
 dateInput.addEventListener("input", () => {
     const booking = new NewBooking();
@@ -146,6 +171,8 @@ dateInput.addEventListener("input", () => {
 
 function saveBooking () {
     const booking = new NewBooking();
+
+    console.log(booking.getNewBooking());
 
     bookingList.addBooking(booking.getNewBooking());
 

@@ -39,19 +39,11 @@
             <label for="date">Datum: </label>
             <input type="datetime-local" name="date" id="date" required>
             <fieldset>
-                <legend>Välj kategori</legend>
-                <input type="checkbox" name="service" id="kindergarden" 
-                value="Hunddagis">
-                <label for="kindergarden">Hunddagis</label>
-                <input type="checkbox" name="service" id="dog-walk" 
-                value="Hundrastning">
-                <label for="dog-walk">Hundrastning</label>
-                <input type="checkbox" name="service" id="dog-pension" 
-                value="Hundpensionat">
-                <label for="dog-pension">Hundpensionat</label>
-                <input type="checkbox" name="service" id="dog-activity" 
-                value="Aktivitetsstund">
-                <label for="dog-activity">Aktivitetsstund</label>
+                
+                <select multiple name="service" id="options">
+                    <option value="">Välj tjänster</option>
+                    
+                </select>
             </fieldset>
             <label for="message">Meddelande:</label>
             <textarea name="message" id="message" rows="10"

@@ -2,6 +2,8 @@ import { services } from "./js/services.js";
 
 const getTimer = document.getElementById("openTimer")
 const getDaysOpen = document.getElementById("daysOpen")
+console.log(getTimer)
+console.log(getDaysOpen)
 
 const openDays = ["Söndag", 
                   "Måndag", 
@@ -107,6 +109,9 @@ export function updateIsOpen() {
     getDaysOpen.appendChild(li)
 }
 
+console.log(getTimer);
+console.log(getDaysOpen);
+
 setInterval(() => {
     updateTimer();
     updateIsOpen();
@@ -122,6 +127,10 @@ function createServices (services) {
     const buyListSection = document.querySelector("#buyList");
 
     const serviceSection = document.querySelector("#services");
+
+    if (!buyListSection || !serviceSection) {
+        return
+    }
 
     const card = document.createElement("div");
     card.id = "service-" + services.id;
@@ -166,7 +175,10 @@ function createServices (services) {
         addBtn
     );
 
-    return (serviceSection.appendChild(card), buyListSection.append(createBuyList))
+    const renderAll = serviceSection.appendChild(card) 
+    + buyListSection.append(createBuyList);
+    
+    return renderAll
 }
 
 export function renderServices (services) {
