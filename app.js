@@ -115,62 +115,75 @@ setInterval(() => {
 
 // Render services here
 
-export function renderServices () {
+function createServices (services) {
+   
+    let buyList = 0;
+
+    const buyListSection = document.querySelector("#buyList");
+
     const serviceSection = document.querySelector("#services");
 
-    if (!serviceSection) {
-        return
-    }
-    serviceSection.replaceChildren();
+    const card = document.createElement("div");
+    card.id = "service-" + services.id;
+    card.classList.add("service-card");
 
-    const isHomePage=
-    window.location.pathname.includes("index");
+    card.addEventListener("click", () => {
+        const details = card.querySelector(".service-details");
+        details.classList.toggle("hidden");
+    });
+
+    const title = document.createElement("h3");
+    title.textContent = services.title;
+
+    const description = document.createElement("p");
+    description.textContent = services.description;
+
+    const price = document.createElement("span");
+    price.textContent = `${services.price} kr/${services.frequency}`
+    
+    const details = document.createElement("div");
+    details.classList.add("service-details", "hidden");
+    details.textContent = services.detailedView;
+
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "Köp";
+    addBtn.classList.add("addBtn");
+    
+    const createBuyList = document.createElement("div")
+
+    addBtn.addEventListener("click", () => {
+        createBuyList.textContent = ""
+        buyList += services.price;
+
+        createBuyList.textContent = `Summa: ${buyList} kr`
+    })
+
+    card.append(
+        title,
+        description,
+        price,
+        details,
+        addBtn
+    );
+
+    return (serviceSection.appendChild(card), buyListSection.append(createBuyList))
+}
+
+export function renderServices (services) {
+    const isHomePage = window.location.pathname.includes("index");
 
     services.forEach(service => {
         // Alla tjänster ska renderas ut när man är i fliken tjänster annars är det 5 tjänster åp hemsidan
         if (service.id < 5 && isHomePage) {
-        
-        function createServices (services) {
-            const card = document.createElement("div");
-            card.id = "service-" + services.id;
-            card.classList.add("service-card");
-
-            card.addEventListener("click", () => {
-                const details = card.querySelector(".service-details");
-                details.classList.toggle("hidden");
-            });
-
-            const title = document.createElement("h3");
-            title.textContent = services.title;
-
-            const description = document.createElement("p");
-            description.textContent = services.description;
-
-            const price = document.createElement("span");
-            price.textContent = `${services.price} kr/${services.frequency}`
-            
-            const details = document.createElement("div");
-            details.classList.add("service-details", "hidden");
-            details.textContent = services.detailedView;
-
-            card.append(
-                title,
-                description,
-                price,
-                details
-            );
-
-            return serviceSection.appendChild(card)
-        }
             createServices(service);
-        } else {
-            createServices(service);
+        } else if (!isHomePage) {
+            createServices(service)
         }
     });
 }   
 
 
-renderServices();
+renderServices(services);
 
 //Render weather and location and if error and loading time
 
