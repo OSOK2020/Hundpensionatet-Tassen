@@ -115,7 +115,7 @@ setInterval(() => {
 
 // Render services here
 
-function renderServices () {
+export function renderServices () {
     const serviceSection = document.querySelector("#services");
 
     if (!serviceSection) {
@@ -123,40 +123,52 @@ function renderServices () {
     }
     serviceSection.replaceChildren();
 
+    const isHomePage=
+    window.location.pathname.includes("index");
+
     services.forEach(service => {
-
-        const card = document.createElement("div");
-        card.id = "service-" + service.id;
-        card.classList.add("service-card");
-
-        card.addEventListener("click", () => {
-            const details = card.querySelector(".service-details");
-            details.classList.toggle("hidden");
-        });
-
-        const title = document.createElement("h3");
-        title.textContent = service.title;
-
-        const description = document.createElement("p");
-        description.textContent = service.description;
-
-        const price = document.createElement("span");
-        price.textContent = `${service.price} kr/${service.frequency}`
+        // Alla tjänster ska renderas ut när man är i fliken tjänster annars är det 5 tjänster åp hemsidan
+        if (service.id < 5 && isHomePage) {
         
-        const details = document.createElement("div");
-        details.classList.add("service-details", "hidden");
-        details.textContent = service.detailedView;
+        function createServices (services) {
+            const card = document.createElement("div");
+            card.id = "service-" + services.id;
+            card.classList.add("service-card");
 
-        card.append(
-            title,
-            description,
-            price,
-            details
-        );
+            card.addEventListener("click", () => {
+                const details = card.querySelector(".service-details");
+                details.classList.toggle("hidden");
+            });
 
-        serviceSection.appendChild(card)
+            const title = document.createElement("h3");
+            title.textContent = services.title;
+
+            const description = document.createElement("p");
+            description.textContent = services.description;
+
+            const price = document.createElement("span");
+            price.textContent = `${services.price} kr/${services.frequency}`
+            
+            const details = document.createElement("div");
+            details.classList.add("service-details", "hidden");
+            details.textContent = services.detailedView;
+
+            card.append(
+                title,
+                description,
+                price,
+                details
+            );
+
+            return serviceSection.appendChild(card)
+        }
+            createServices(service);
+        } else {
+            createServices(service);
+        }
     });
-}
+}   
+
 
 renderServices();
 
@@ -257,10 +269,14 @@ function createLocationWeather (location, weatherData, error, loadTime) {
         removeBtn.classList.add("removeBtn");
         removeBtn.textContent = "Ta bort";
 
-        weatherSection.prepend(pasteWeather, removeBtn)
+        const weatherCard = document.createElement("div");
+
+        weatherCard.append(pasteWeather, removeBtn);
+
+        weatherSection.prepend(weatherCard);
         
-        removeBtn.addEventListener("click", (e) => {
-                weatherSection.replaceChildren();
+        removeBtn.addEventListener("click", () => {
+                weatherCard.remove();
         });
 
         return weatherSection

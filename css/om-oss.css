@@ -17,12 +17,59 @@ main {
     border: 2px solid blue;
 }
 
-.om-oss-img img {
-    max-width: 500px;
-    width: 100%;    /* Bilden fyller hela figure-elementets bredd */
-    height: auto;   /* Behåller bildens proportioner */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: lightgreen;
 }
 
+main {
+    flex: 1;
+}
+
+#mainheader, #opentime {
+    font-family: fantasy;
+    text-align: center;
+}
+
+#mainheader {
+    font-size: 4rem;
+}
+
+#opentime {
+    font-size: 2rem;
+}
+
+#navigation-top, #navigation-buttom {
+    text-align: center;
+}
+
+#navigation-buttom ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-footer {
+    font-family: fantasy;
+    text-align: center;
+}
+
+.info-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 2px solid blue;
+    margin: 1rem auto;
+}
+
+/* Mobil */
+@media (max-width: 767px) {
+    .om-oss-img {
+        width: 80%;
+    } 
+}
 
 /* Surfplatta */
 @media (min-width: 768px) {

@@ -201,7 +201,7 @@ function updateBooking() {
     savedBookings.forEach((booking, index) => {
         const bookingItem = document.createElement("li");
         
-        const deletedItmes = deleteItem(index);
+        const deletedItems = deleteItem(index);
 
         bookingItem.innerHTML = `<strong> Prioritet:</strong> (${booking.prio})<br>
        <strong> Ditt namn:</strong> ${booking.name} <br> 
@@ -212,7 +212,10 @@ function updateBooking() {
         <strong>Bokade aktiviteter:</strong> ${booking.service} <br>
         <strong>Meddelande:</strong> ${booking.message}
         `;
-        contactResults.append(bookingItem, deletedItmes);
+
+        bookingItem.append(deletedItems);
+
+        contactResults.append(bookingItem);
     }); 
 }
 
