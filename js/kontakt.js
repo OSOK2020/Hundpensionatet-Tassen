@@ -230,7 +230,7 @@ function updateBooking() {
         
         const deletedItems = deleteItem(index);
 
-        bookingItem.innerHTML = `<strong> Prioritet:</strong> (${booking.prio})<br>
+        bookingItem.innerHTML = `<hr> <strong> Prioritet:</strong> (${booking.prio})<br>
        <strong> Ditt namn:</strong> ${booking.name} <br> 
        <strong> Hundens namn:</strong> ${booking.dogName} <br> 
         <strong>Din bokade tid är:</strong> ${booking.formattedDate} <br>

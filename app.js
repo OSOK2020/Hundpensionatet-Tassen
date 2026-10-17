@@ -118,17 +118,98 @@ setInterval(() => {
 }, 1000)
 
 
+
+class BuyList {
+    constructor() {
+        this.buyItem = 
+        JSON.parse(localStorage.getItem("buyItem")) || [];
+    }
+
+    addBuyItem(buyItem) {
+        this.buyItem.push(buyItem);
+
+        localStorage.setItem(
+            "buyItem",
+            JSON.stringify(this.buyItem)
+        );
+    }
+
+    getbuyItem() {
+        return this.buyItem;
+    }
+
+    removeBuyItem(index) {
+        this.buyItem.splice(index, 1);
+
+        localStorage.setItem(
+            "buyItem",
+            JSON.stringify(this.buyItem)
+        );
+    }
+
+    // getTotalPrice() {
+    //     return this.buyItem.reduce(
+    //         (sum, item) => sum + item.price,
+    //         0
+    //     );
+    // }
+
+}
+
+console.log(JSON.parse(localStorage.getItem("buyItem")))
+
+// Create buyList here
+const buyList = new BuyList();
+
+// Render buyList here
+
+function renderBuyList () {
+    const buyListSection = document.querySelector("#buyList");
+
+    if (!buyListSection) {
+        return;
+    }
+
+    buyListSection.innerHTML = "";
+
+    const savedBuyList = buyList.getbuyItem();
+
+    savedBuyList.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.textContent = `${item.title} - ${item.price} kr`;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Ta bort";
+
+        removeBtn.addEventListener("click", () => {
+            buyList.removeBuyItem(index);
+            renderBuyList();
+        });
+
+        li.append(removeBtn);
+        buyListSection.append(li);
+    });
+
+    let total = 0;
+
+    savedBuyList.forEach(item => {
+        total += item.price;
+    });
+    const sum = document.createElement("p");
+    sum.textContent = `Totalt: ${total}`
+
+    buyListSection.append(sum);
+}
+// Render buyList here
+renderBuyList();
+
 // Render services here
 
 function createServices (services) {
-   
-    let buyList = 0;
-
-    const buyListSection = document.querySelector("#buyList");
 
     const serviceSection = document.querySelector("#services");
 
-    if (!buyListSection || !serviceSection) {
+    if (!serviceSection) {
         return
     }
 
@@ -154,18 +235,24 @@ function createServices (services) {
     details.classList.add("service-details", "hidden");
     details.textContent = services.detailedView;
 
+    //save buyList
+
     const addBtn = document.createElement("button");
     addBtn.textContent = "Köp";
     addBtn.classList.add("addBtn");
-    
-    const createBuyList = document.createElement("div")
 
     addBtn.addEventListener("click", () => {
-        createBuyList.textContent = ""
-        buyList += services.price;
 
-        createBuyList.textContent = `Summa: ${buyList} kr`
-    })
+        buyList.addBuyItem({
+                        id: services.id,
+                        title: services.title,
+                        price: services.price
+                    });
+
+        console.log(buyList)
+        
+        renderBuyList();
+    });
 
     card.append(
         title,
@@ -175,8 +262,7 @@ function createServices (services) {
         addBtn
     );
 
-    const renderAll = serviceSection.appendChild(card) 
-    + buyListSection.append(createBuyList);
+    const renderAll = serviceSection.appendChild(card);
     
     return renderAll
 }
@@ -203,6 +289,37 @@ const searchWeather = document.getElementById("searchWeather");
 const cityInput = document.getElementById("cityInput");
 
 console.log(searchWeather)
+
+class WeatherList {
+    constructor() {
+        this.weatherData =
+            JSON.parse(localStorage.getItem("weatherData")) || [];
+    }
+
+    addWeather(weather) {
+        this.weatherData.push(weather);
+
+        localStorage.setItem(
+            "weatherData",
+            JSON.stringify(this.weatherData)
+        );
+    }
+
+    getWeather() {
+        return this.weatherData;
+    }
+
+    removeWeather(index) {
+        this.weatherData.splice(index, 1);
+
+        localStorage.setItem(
+            "weatherData",
+            JSON.stringify(this.weatherData)
+        );
+    }
+}
+
+const weatherList = new WeatherList();
 
 if (searchWeather && cityInput) {
     searchWeather.addEventListener("click", async () => {
@@ -262,6 +379,15 @@ if (searchWeather && cityInput) {
 
             createLocationWeather(location, weatherData, null, loadTime);
 
+            weatherList.addWeather({
+                city: location.name,
+                country: location.country,
+                temperature: weatherData.current.temperature_2m,
+                unit: weatherData.current_units.temperature_2m,
+                loadTime,
+                searchedAt: new Date().toLocaleString("sv-SE")
+            });
+
             } catch (error){
 
                 loadingStatus.remove();
@@ -272,6 +398,48 @@ if (searchWeather && cityInput) {
     });
 
 }
+
+function renderStoredWeather() {
+
+    const weatherSection = document.getElementById("renderWeather");
+    
+    if (!weatherSection) {
+        return
+    }
+
+    weatherSection.innerHTML = "";
+
+    const savedWeather = 
+        weatherList.getWeather();
+
+    savedWeather.forEach((weather, index) => {
+        const weatherCard = document.createElement("div");
+
+        const p = document.createElement("p");
+
+        p.textContent = 
+        `Ort & land: ${weather.city}
+        - ${weather.country} |
+        Temperatur:
+        ${weather.temperature}${weather.unit} |
+        Laddningstid:
+        ${weather.loadTime} ms |
+        Sökt: ${weather.searchedAt}`;
+        
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Ta bort";
+
+        removeBtn.addEventListener("click", () => {
+            weatherList.removeWeather(index);
+            renderStoredWeather();
+        });
+    
+        weatherCard.append(p, removeBtn);
+        weatherSection.append(weatherCard);
+    });
+}
+
+renderStoredWeather();
 
 //render out the data from the API
 
