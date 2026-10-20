@@ -37,7 +37,7 @@ const bookingField = {
 
 const messageTextarea = document.getElementById("message");
 
-const showBookings = document.getElementById("show-Btn");
+// const showBookings = document.getElementById("show-Btn");
 
 const prioLow = document.getElementById("low");
 const prioMedium = document.getElementById("medium");
@@ -272,8 +272,10 @@ contactForm.addEventListener("submit", (event) => {
     updateBooking();
 });
 
-showBookings.addEventListener("click", (event) => {
-    event.preventDefault();
-    updateBooking();
-})
+// showBookings.addEventListener("click", (event) => {
+//     event.preventDefault();
+//     updateBooking();
+// })
+
+updateBooking();
 
